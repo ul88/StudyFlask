@@ -29,14 +29,13 @@ def delTodo(todoId):
 @app.route("/update/<todoId>", methods=["GET","POST"])
 def updateTodo(todoId):
     if request.method == "POST":
-        # idx = 0
-        # for now in todoList:
-        #     if now["id"] == int(todoId):
-        #         break
-        #     idx+=1
-        # todoList[idx]["done"] = not todoList[idx]["done"]
         global todoList
-        todoList = [todos if todos['id'] != int(todoId) else {"id" : todos['id'], "todo" : todos['todo'], "done" : not todos['done']} for todos in todoList]
+        todoList = [todos if todos['id'] != int(todoId) 
+                    else {
+                        "id" : todos['id'], 
+                        "todo" : todos['todo'], 
+                        "done" : not todos['done']
+                    } for todos in todoList]
         print(todoList)
         return render_template("mainPage.html", todos = todoList)
     else:
