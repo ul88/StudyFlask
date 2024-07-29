@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
+</head>
+<body>
+    <form action="/" method="post">
+        <p><label for="keyword1">키워드 1</label> <input type="text" name="keyword1" id="keyword1"></p>
+        <p><label for="keyword2">키워드 2</label> <input type="text" name="keyword2" id="keyword2"></p>
+        <button type="submit">검색</button>
+    </form>
+
+    {% if data %}
+    <div id="result">
+        {%for k, v in data.items() %} <div class="box box{{loop.index}}" value="{{v}}">{{k}}</div>{%endfor%}
+    {%endif%}
+
+    <script src="{{url_for('static',filename='js/index.js')}}"></script>
+</body>
+</html>
