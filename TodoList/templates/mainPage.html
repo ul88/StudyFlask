@@ -8,27 +8,27 @@
 <body>
     <h1>TodoList</h1>
 
-    <form action="/add" method="post">
-        <input type="text" name="todo">
+    <form action="{{ url_for('addTodo')}}" method="post">
+        <input type="text" name="content">
         <button type="submit">추가</button>
     </form>
 
     <h3>해야할 일</h3>
     {% for now in todos %}
-        {% if now["done"] == False %}
-        <p>{{now["todo"]}} 
-            <form action="/update/{{now['id']}}" method="post"><input type="submit" name="" id="" value="변환"></form>
-            <form action="/delete/{{now['id']}}" method="post"><input type="submit" value="삭제"></form> 
+        {% if now.done == False %}
+        <p>{{now.content}} 
+            <form action="{{ url_for('updateTodo', todoId=now.id) }}" method="post"><input type="submit" name="" id="" value="변환"></form>
+            <form action="{{ url_for('delTodo', todoId=now.id) }}" method="post"><input type="submit" value="삭제"></form> 
         </p>
         {% endif %}
     {% endfor %}
 
     <h3>한 일</h3>
     {% for now in todos %}
-        {% if now["done"] == True %}
-        <p>{{now["todo"]}} 
-            <form action="/update/{{now['id']}}" method="post"><input type="submit" name="" id="" value="변환"></form>
-            <form action="/delete/{{now['id']}}" method="post"><input type="submit" value="삭제"></form> 
+        {% if now.done == True %}
+        <p>{{now.content}} 
+            <form action="{{ url_for('updateTodo', todoId=now.id) }}" method="post"><input type="submit" name="" id="" value="변환"></form>
+            <form action="{{ url_for('delTodo', todoId=now.id) }}" method="post"><input type="submit" value="삭제"></form> 
         </p>
         {% endif %}
     {% endfor %}
