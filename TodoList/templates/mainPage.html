@@ -6,6 +6,10 @@
     <title>TodoList 메인 페이지</title>
 </head>
 <body>
+    <form action="{{url_for('logout')}}">
+        <button type="submit">로그아웃</button>
+    </form>
+
     <h1>TodoList</h1>
 
     <form action="{{ url_for('addTodo')}}" method="post">
