@@ -1,5 +1,5 @@
 import config
-from flask import Flask, request, render_template, url_for, session, g
+from flask import Flask, request, render_template, url_for, session, g, flash
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import redirect
 from flask_migrate import Migrate
@@ -25,42 +25,42 @@ def signupPage():
 
 @app.route("/todo")
 def home():
-    return render_template("mainPage.html", todos = Todo.query.all())
+    return render_template("mainPage.html", todos = Todo.query.all(), userId = session["userId"])
 
 @app.route("/signup",methods=['POST','GET'])
 def signup():
     if request.method == "POST":
-        userId = request.form.get("uesrId")
         password = request.form.get("password")
         password2 = request.form.get("password2")
 
-        user = User.query.filter_by(userId=userId).first()
-        if not user and password == password2:
-            user = User(userId = request.form.get("userId"), password = bcrypt.generate_password_hash(password = request.form.get("password")))
-            db.session.add(user)
-            db.session.commit()
-            return redirect(url_for("loginPage"))
-    return "잘못된 접근입니다."
+        user = User.query.filter_by(userId=request.form.get("userId")).first()
+        if not user:
+            if password == password2:
+                user = User(userId = request.form.get("userId"), password = bcrypt.generate_password_hash(password = request.form.get("password")))
+                db.session.add(user)
+                db.session.commit()
+                return redirect(url_for("loginPage"))
+            else:
+                flash("비밀번호가 서로 다릅니다.")
+        else:
+            flash("이미 있는 아이디입니다.")
+    return redirect(url_for("signupPage"))
 
 
 @app.route("/login",methods=['POST','GET'])
 def login():
     if request.method == "POST":
-        userId = request.form.get("uesrId")
-        password = request.form.get("password")
-        user = User.query.filter_by(userId=userId).first()
-        print(user)
+        user = User.query.filter_by(userId=request.form.get("uesrId")).first()
 
         if not user:
-            return "존재하지 않는 데이터입니다."
-        elif not bcrypt.check_password_hash(user.password, password):
-            return "비밀번호가 틀립니다."
-        
-        session.clear()
-        session['user_id'] = user.id
-        return redirect(url_for("home"))
-    else:
-        return "잘못된 접근입니다."
+            flash("잘못 입력했습니다.")
+        elif not bcrypt.check_password_hash(user.password, request.form.get("password")):
+            flash("잘못 입력했습니다.")
+        else:
+            session.clear()
+            session["userId"] = request.form.get("uesrId")
+            return redirect(url_for("home"))
+    return redirect(url_for("loginPage"))
 
 @app.route('/logout')
 def logout():
@@ -71,7 +71,7 @@ def logout():
 def addTodo():
     if request.method == "POST":
         if request.form.get("content") == "": return redirect(url_for("home"))
-        todo = Todo(content = request.form.get("content"), done = False)
+        todo = Todo(userId = session["userId"], content = request.form.get("content"), done = False)
         db.session.add(todo)
         db.session.commit()
         return redirect(url_for("home"))

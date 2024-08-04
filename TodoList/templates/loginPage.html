@@ -6,6 +6,11 @@
     <title>로그인 화면</title>
 </head>
 <body>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-danger" role="alert">
+        {{message}}
+    </div>
+    {% endfor %}
     로그인
     <form action="{{ url_for('login') }}" method="post">
         <input type="text" name="uesrId" id="userId">

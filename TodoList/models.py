@@ -13,5 +13,6 @@ class Todo(db.Model):
     __tablename__ = "todo"
 
     id = db.Column(db.Integer, primary_key = True)
+    userId = db.Column(db.String(32), nullable = False)
     content = db.Column(db.Text(), nullable = False)
     done = db.Column(db.Boolean, default=False, nullable=False)

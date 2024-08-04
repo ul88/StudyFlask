@@ -10,7 +10,7 @@
         <button type="submit">로그아웃</button>
     </form>
 
-    <h1>TodoList</h1>
+    <h1>{{userId}}님의 TodoList</h1>
 
     <form action="{{ url_for('addTodo')}}" method="post">
         <input type="text" name="content">
@@ -19,21 +19,25 @@
 
     <h3>해야할 일</h3>
     {% for now in todos %}
+        {% if now.userId == userId %}
         {% if now.done == False %}
         <p>{{now.content}} 
             <form action="{{ url_for('updateTodo', todoId=now.id) }}" method="post"><input type="submit" name="" id="" value="변환"></form>
             <form action="{{ url_for('delTodo', todoId=now.id) }}" method="post"><input type="submit" value="삭제"></form> 
         </p>
         {% endif %}
+        {% endif %}
     {% endfor %}
 
     <h3>한 일</h3>
     {% for now in todos %}
+        {% if now.userId == userId %}
         {% if now.done == True %}
         <p>{{now.content}} 
             <form action="{{ url_for('updateTodo', todoId=now.id) }}" method="post"><input type="submit" name="" id="" value="변환"></form>
             <form action="{{ url_for('delTodo', todoId=now.id) }}" method="post"><input type="submit" value="삭제"></form> 
         </p>
+        {% endif %}
         {% endif %}
     {% endfor %}
 </body>
